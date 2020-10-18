@@ -1,6 +1,6 @@
 <?php
 use App\Classes\Block;
-// Enter number of blocks
+
  
 //verify integer value 
 // verify maximum of blocks allowed to set
@@ -18,7 +18,29 @@ function generateBlocks($num) {
     }
 }
 
-$blocks = generateBlocks();
+
+// Enter number of blocks
+echo "Enter number of blocks: ";
+
+handleUserInput();
+
+function handleUserInput(){
+    $handle = fopen ("php://stdin","r");
+    $line = fgets($handle);
+    $num = (int)trim($line);        
+    
+    if($num > 0){
+        echo "$num blocks";
+        echo PHP_EOL;
+        exit;
+    }else{
+        echo "Wrong value! Please input a number greater than 0!";
+        echo PHP_EOL;
+        handleUserInput();
+    }
+}
+/*
+$blocks = generateBlocks($num);
 foreach ($blocks as $block) {
     echo "$block()->get_name()";
     echo " : ";
@@ -27,3 +49,4 @@ foreach ($blocks as $block) {
     echo PHP_EOL;
 
 }
+*/
