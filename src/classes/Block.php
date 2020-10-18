@@ -1,6 +1,8 @@
 <?php
+namespace App\Classes;
+use App\Classes\AbstractBlock;
 
-class Block extends BlockAbstract {
+class Block extends AbstractBlock {
 
     private $actualPosition;
     private $initialPosition;

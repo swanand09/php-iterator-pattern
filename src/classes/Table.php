@@ -1,6 +1,8 @@
 <?php
+namespace App\Classes;
+use App\Classes\AbstractTable;
 
-class Table extends TableAbstract{
+class Table extends AbTable{
 
     const maxBlocks  = 25;
 
