@@ -48,7 +48,7 @@ class Robot {
         list($firstPart,$firstBlock,$secondPart,$secondBlock) = $textSplit;
         
         if(in_array($firstPart,$this->command->get_firstPartValues()) && (int)$firstBlock > 0
-	        && in_array($secondPart,$this->command->get_secondPartValues()) && (int)$secondBlock > 0) {
+	        && in_array($secondPart,$this->command->get_secondPartValues()) && (int)$secondBlock > 0  && $firstBlock!=$secondBlock) {
 	     
 	        $this->command->set_firstPart($firstPart);
 	        $this->command->set_firstBlock($firstBlock);
