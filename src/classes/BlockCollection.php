@@ -2,7 +2,7 @@
 namespace App\Classes;
 
 use Iterator;
-
+use App\Classes\Block;
 
 class BlocksOrderIterator implements \Iterator {
 	
@@ -76,7 +76,7 @@ class BlockCollection implements \IteratorAggregate{
 		return $this->listBlocks;
 	}
 	
-	public function addBlock($block)
+	public function addBlock(Block $block)
 	{
 		$this->listBlocks[] = $block;
 	}
