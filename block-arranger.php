@@ -49,7 +49,7 @@ class BlockArranger{
 				$this->robot->executeCommand();
 			}else{
 				
-				$this->printText('Your command is invalid. Please try again!');
+				$this->printText($this->robot->getShoutMessage());
 				$this->handleUserInput(true);
 			}
 			
@@ -84,8 +84,11 @@ class BlockArranger{
 
 $blockArranger = new BlockArranger();
 
-$blockArranger->init();
-
+try {
+	$blockArranger->init();
+}catch(Exception $e){
+	$blockArranger->printText($e->getMessage());
+}
 
 
 
