@@ -1,22 +1,10 @@
 <?php
+ini_set('display_errors', 1);
+ini_set('display_startup_errors', 1);
+error_reporting(E_ALL);
+require_once "vendor/autoload.php";
 use App\Classes\Block;
 use App\Classes\BlockCollection;
- 
-//verify integer value 
-// verify maximum of blocks allowed to set
-
-// output table
-// position and block number
-
-// Enter your command  
-
-
-
-
-// Enter number of blocks
-printText("Enter number of blocks: ");
-
-handleUserInput();
 
 function printText($text){
 	
@@ -24,15 +12,22 @@ function printText($text){
 	echo PHP_EOL;
 }
 
+
+// Enter number of blocks
+printText("Enter number of blocks: ");
+
+handleUserInput();
+
+
 function handleUserInput($command=false){
     $handle = fopen ("php://stdin","r");
     $line = fgets($handle);
     $num=0;
     $commandText = '';
-    if($command) {
+    if(!$command) {
 	    $num = (int)trim($line);
     }else{
-	    $commandText = trim($line)
+	    $commandText = trim($line);
     }
     
     if(!empty($commandText)){
@@ -42,9 +37,20 @@ function handleUserInput($command=false){
 	
 	    if ($num > 0) {
 		    printText("You have $num blocks");
-		    generateBlocks($num);
-		    printText("Please place a command");
-		    handleUserInput(true);
+		    $collection =  generateBlocks($num);
+		    
+		    try {
+			    foreach ($collection->getIterator() as $item) {
+				    printText($item->get_name());
+			    }
+		    }catch (Exception $e){
+		    	printText($e->getMessage());
+		    	exit;
+		    }
+		    
+		    
+		    // printText("Please place a command");
+		   // handleUserInput(true);
 	    } else {
 		    printText("Wrong value! Please input a number greater than 0!");
 		    handleUserInput();
@@ -61,4 +67,5 @@ function generateBlocks($num) {
 		$block->set_actualPosition($i);
 		$blockCollection->addBlock($block);
 	}
+	return $blockCollection;
 }
