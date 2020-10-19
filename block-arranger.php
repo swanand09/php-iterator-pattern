@@ -63,10 +63,10 @@ class BlockArranger{
 				/*
 				 try {
 					 foreach ($collection->getIterator() as $item) {
-						 printText($item->get_name());
+						$this->printText($item->get_name());
 					 }
 				 }catch (Exception $e){
-					 printText($e->getMessage());
+					 $this->printText($e->getMessage());
 					 exit;
 				 }*/
 				

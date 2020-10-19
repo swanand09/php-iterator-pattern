@@ -8,26 +8,33 @@ class Robot {
 
     private $command;
     private $shoutMessage;
+    
+    private $blockCollection;
 
     function __construct(){
 	
 	    $this->command = new Command();
     }
 	
+    public function get_blockCollection(){
+    	
+    	return $this->blockCollection;
+    }
+    
 	/**
 	 * @param $num
-	 * @return BlockCollection
+	 *
 	 */
-	public function generateBlockCollection($num): BlockCollection {
-		$blockCollection = new BlockCollection();
+	public function generateBlockCollection($num) {
+		$this->blockCollection = new BlockCollection();
 		for($i=1;$i<=$num;$i++){
 			$block = new Block();
 			$block->set_name($i);
 			$block->set_initialPosition($i);
 			$block->set_actualPosition($i);
-			$blockCollection->addBlock($block);
+			$this->blockCollection->addBlock($block);
 		}
-		return $blockCollection;
+		
 	}
 	
 	public function validateCommand($commandText){
@@ -130,7 +137,31 @@ class Robot {
     
     private function moveBlockOnto(){
         
-        die('moveBlockOnto');
+    	
+        //check if first block has stack
+	    // if yes set each block to its initial position
+	    try {
+		    foreach ($this->blockCollection->getIterator() as $block) {
+			    if($block->get_name()==(int)$this->command->get_firstBlock()){
+			    	
+			    	if(count($block->getStackCollection())>0){
+					    foreach ($block->getStackCollection->getIterator() as $block) {
+					    
+					    }
+				    }
+			    }
+		    }
+	    }catch (Exception $e){
+		    $this->printText($e->getMessage());
+		    exit;
+	    }
+	    
+	    
+	    //check if second block has stack
+	    // if yes set each block to its initial position
+	    
+	    //change position of first block to position of second block
+	    // set first block as stack of second block
     }
     
     private function moveBlockOver(){
