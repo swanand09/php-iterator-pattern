@@ -6,4 +6,6 @@ abstract class AbstractCommand{
 	protected $secondPart;
 	protected $firstBlock;
 	protected $secondBlock;
+	protected $fistPartValues = ['move','pile'];
+	protected $secondPartValues = ['over','onto'];
 }

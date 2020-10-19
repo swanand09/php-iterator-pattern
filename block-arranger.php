@@ -5,67 +5,89 @@ error_reporting(E_ALL);
 require_once "vendor/autoload.php";
 use App\Classes\Block;
 use App\Classes\BlockCollection;
+use App\Classes\Robot;
 
-function printText($text){
+class BlockArranger{
 	
-	echo $text;
-	echo PHP_EOL;
-}
-
-
-// Enter number of blocks
-printText("Enter number of blocks: ");
-
-handleUserInput();
-
-
-function handleUserInput($command=false){
-    $handle = fopen ("php://stdin","r");
-    $line = fgets($handle);
-    $num=0;
-    $commandText = '';
-    if(!$command) {
-	    $num = (int)trim($line);
-    }else{
-	    $commandText = trim($line);
-    }
-    
-    if(!empty($commandText)){
-        //validate command
-	    // execute command
-    }else {
+	public $robot;
 	
-	    if ($num > 0) {
-		    printText("You have $num blocks");
-		    $collection =  generateBlocks($num);
-		    
-		    try {
-			    foreach ($collection->getIterator() as $item) {
-				    printText($item->get_name());
-			    }
-		    }catch (Exception $e){
-		    	printText($e->getMessage());
-		    	exit;
-		    }
-		    
-		    
-		    // printText("Please place a command");
-		   // handleUserInput(true);
-	    } else {
-		    printText("Wrong value! Please input a number greater than 0!");
-		    handleUserInput();
-	    }
-    }
-}
-
-function generateBlocks($num) {
-	$blockCollection = new BlockCollection();
-	for($i=1;$i<=$num;$i++){
-		$block = new Block();
-		$block->set_name($i);
-		$block->set_initialPosition($i);
-		$block->set_actualPosition($i);
-		$blockCollection->addBlock($block);
+	function __construct(){
+		
+		$this->robot = new Robot();
 	}
-	return $blockCollection;
+	
+	public function printText($text){
+		
+		echo $text;
+		echo PHP_EOL;
+	}
+	
+	public function init(){
+		$this->printText("Enter number of blocks: ");
+		$this->handleUserInput();
+	}
+	
+	public function handleUserInput($command=false){
+		
+		
+		$handle = fopen ("php://stdin","r");
+		$line = fgets($handle);
+		$num=0;
+		$commandText = '';
+		if(!$command) {
+			$num = (int)trim($line);
+		}else{
+			$commandText = trim($line);
+		}
+		
+		if(!empty($commandText)){
+			
+			//validate command
+			if($this->robot->validateCommand($commandText)){
+				
+				// execute command
+				$this->robot->executeCommand();
+			}else{
+				
+				$this->printText('Your command is invalid. Please try again!');
+				$this->handleUserInput(true);
+			}
+			
+		}else {
+			
+			if ($num > 0) {
+				
+				$this->printText("You have $num blocks");
+				$collection =  $this->robot->generateBlockCollection($num);
+				
+				/*
+				 try {
+					 foreach ($collection->getIterator() as $item) {
+						 printText($item->get_name());
+					 }
+				 }catch (Exception $e){
+					 printText($e->getMessage());
+					 exit;
+				 }*/
+				
+				
+				$this->printText("Please enter a command");
+				$this->handleUserInput(true);
+			} else {
+				$this->printText("Wrong value! Please input a number greater than 0!");
+				$this->handleUserInput();
+			}
+		}
+	}
+
 }
+
+$blockArranger = new BlockArranger();
+
+$blockArranger->init();
+
+
+
+
+
+

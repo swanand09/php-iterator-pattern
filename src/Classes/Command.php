@@ -6,6 +6,19 @@ use App\Classes\AbstractCommand;
 class Command extends AbstractCommand{
  
 	
+	public function get_firstPartValues()
+	{
+		return $this->fistPartValues;
+	}
+	
+	public function get_secondPartValues()
+	{
+		return $this->secondPartValues;
+	}
+	
+	
+	
+	
 	public function set_firstPart($firstPart)
 	{
 		$this->firstPart = $firstPart;
