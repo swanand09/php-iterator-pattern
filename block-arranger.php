@@ -11,23 +11,27 @@ class BlockArranger{
 	
 	public $robot;
 	
-	function __construct(){
+	function __construct()
+	{
 		
 		$this->robot = new Robot();
 	}
 	
-	public function printText($text){
+	public function printText($text)
+	{
 		
 		echo $text;
 		echo PHP_EOL;
 	}
 	
-	public function init(){
+	public function init()
+	{
 		$this->printText("Enter number of blocks: ");
 		$this->handleUserInput();
 	}
 	
-	public function handleUserInput($command=false){
+	public function handleUserInput($command=false)
+	{
 		
 		
 		$handle = fopen ("php://stdin","r");
@@ -49,7 +53,7 @@ class BlockArranger{
 				$this->robot->executeCommand();
 			}else{
 				
-				$this->printText($this->robot->getShoutMessage());
+				$this->printText($this->robot->getMessage());
 				$this->handleUserInput(true);
 			}
 			

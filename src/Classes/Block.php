@@ -1,6 +1,7 @@
 <?php
 namespace App\Classes;
 use App\Classes\AbstractBlock;
+use App\Classes\BlockCollection;
 
 class Block extends AbstractBlock {
 
@@ -21,19 +22,23 @@ class Block extends AbstractBlock {
 
     }
 	
-    public function set_stack($stack){
+    public function set_stack(BlockCollection $stack)
+    {
     	$this->stack = $stack;
     }
-	public function get_stack(){
+	public function get_stack()
+	{
 		return $this->stack;
 	}
 	
-	public function hasStack(){
-    	return count($this->stack) > 0;
+	public function has_stack()
+	{
+    	return count($this->stack->getIterator()) > 0;
 	}
     
     
-    public function set_initialPosition($initialPosition){
+    public function set_initialPosition($initialPosition)
+    {
     	
     	$this->initialPosition = $initialPosition;
     }
@@ -42,20 +47,24 @@ class Block extends AbstractBlock {
 		return $this->initialPosition;
 	}
 	
-	public function set_name($name){
+	public function set_name($name)
+	{
   
 		$this->name = $name;
 	}
-	public function get_name(){
+	public function get_name()
+	{
   
 		return $this->name;
 	}
 	
-	public function set_actualPosition($actualPosition){
+	public function set_actualPosition($actualPosition)
+	{
 		
 		$this->actualPosition = $actualPosition;
 	}
-	public function get_actualPosition(){
+	public function get_actualPosition()
+	{
 		
 		return $this->actualPosition;
 	}

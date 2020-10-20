@@ -16,6 +16,10 @@ class Command extends AbstractCommand{
 		return $this->secondPartValues;
 	}
 	
+	public function get_exitCommand()
+	{
+	
+	}
 	
 	
 	

@@ -7,7 +7,7 @@ use App\Classes\Command;
 class Robot {
 
     private $command;
-    private $shoutMessage;
+    private $message;
     
     private $blockCollection;
 
@@ -16,7 +16,8 @@ class Robot {
 	    $this->command = new Command();
     }
 	
-    public function get_blockCollection(){
+    public function get_blockCollection()
+    {
     	
     	return $this->blockCollection;
     }
@@ -25,7 +26,8 @@ class Robot {
 	 * @param $num
 	 *
 	 */
-	public function generateBlockCollection($num) {
+	public function generateBlockCollection($num)
+	{
 		$this->blockCollection = new BlockCollection();
 		for($i=1;$i<=$num;$i++){
 			$block = new Block();
@@ -38,7 +40,8 @@ class Robot {
 		
 	}
 	
-	public function validateCommand($commandText){
+	public function validateCommand($commandText)
+	{
 		
 		$textSplit = explode(" ",$commandText);
 		if(sizeof($textSplit)==4){
@@ -48,9 +51,9 @@ class Robot {
 		return false;
 	}
   
-	public function getShoutMessage()
+	public function getMessage()
 	{
-		return $this->shoutMessage;
+		return $this->message;
 	}
 	
 	/**
@@ -59,7 +62,8 @@ class Robot {
 	 * @return bool
 	 *
 	 */
-    public function handleCommand($textSplit): bool{
+    public function handleCommand($textSplit): bool
+    {
         
         list($firstPart,$firstBlock,$secondPart,$secondBlock) = $textSplit;
         
@@ -84,29 +88,29 @@ class Robot {
 							
 							        return true;
 						        } else {
-							        $this->shoutMessage = "Second block should be a number. Please try again!";
+							        $this->message = "Second block should be a number. Please try again!";
 						        }
 						
 					        } else {
 						
-						        $this->shoutMessage = "Third text of the command should be 'onto' or 'over'. Please try again!";
+						        $this->message = "Third text of the command should be 'onto' or 'over'. Please try again!";
 					        }
 					
 				        } else {
-					        $this->shoutMessage = "First block should be a number. Please try again!";
+					        $this->message = "First block should be a number. Please try again!";
 				        }
 				
 			        } else {
-				        $this->shoutMessage = "First text of the command should be 'move' or 'pile'. Please try again!";
+				        $this->message = "First text of the command should be 'move' or 'pile'. Please try again!";
 			        }
 		        } else {
-			        $this->shoutMessage = "Pile or move same block is not allowed. Please try again!";
+			        $this->message = "Pile or move same block is not allowed. Please try again!";
 		        }
 	        }else{
-		        $this->shoutMessage = "The second block cannot be greater than the total number of blocks $this->blockCollection->get_numBlocks(). Please try again!";
+		        $this->message = "The second block cannot be greater than the total number of blocks $this->blockCollection->get_numBlocks(). Please try again!";
 	        }
         }else{
-	        $this->shoutMessage = "The first block cannot be greater than the total number of blocks $this->blockCollection->get_numBlocks(). Please try again!";
+	        $this->message = "The first block cannot be greater than the total number of blocks $this->blockCollection->get_numBlocks(). Please try again!";
         }
         
         return false;
@@ -115,7 +119,8 @@ class Robot {
 	/**
 	 * interpret command in parts
 	 */
-    public function executeCommand(){
+    public function executeCommand()
+    {
 
     	//move a onto b
         if($this->command->get_firstPart()=='move' && $this->command->get_secondPart() =='onto'){
@@ -138,61 +143,89 @@ class Robot {
 	    }
     }
     
-    private function moveBlockOnto(){
-        
+    private function moveBlockOnto()
+    {
+     
+    	$firstBlock = new Block();
+    	$secondBlock = new Block();
     	
-        //check if first block has stack
-	    // if yes set each block to its initial position
 	    try {
-		    $firstBlock= 0;
-		    $firstBlockIndex = -1;
-		    foreach ($this->blockCollection->getIterator() as $block) {
-			    if($block->get_name()==(int)$this->command->get_firstBlock()){
-			    	$firstBlock = $block;
-			    	$firstBlockIndex = $this->blockCollection->getIterator()->key();
-			    	if(count($block->getStackCollection())>0){
-					    foreach ($block->getStackCollection->getIterator() as $block) {
-					    
-					    }
-				    }
-			    	
-			    	$block->set_position((int)$this->command->get_secondBlock());
-			    }
-		    }
+		    
+	    	//lookup firstBlock from collection
+		    $this->blockCollection->getIterator()->set_position((int)$this->command->get_firstBlock());
+		    $firstBlock = $this->blockCollection->getIterator()->current();
+		
+		    //check if first block has stack
+		    // if yes set each block to its initial position
+		    $this->emptyStackBlock($firstBlock);
+			
+		
+		    //lookup secondBlock from collection
+		    $this->blockCollection->getIterator()->set_position((int)$this->command->get_secondBlock());
+		    $secondBlock = $this->blockCollection->getIterator()->current();
+		
+		    //check if second block has stack
+		    // if yes set each block to its initial position
+		    $this->emptyStackBlock($secondBlock);
+		    
+		    //add firstBlock as stack of secondBlock;
+		    $collection = new BlockCollection();
+		    $collection->addBlock($firstBlock);
+		    $secondBlock->set_stack($collection);
+		    
+		    
 	    }catch (Exception $e){
-		    $this->printText($e->getMessage());
-		    exit;
+	    	
+		    $this->message = "Got an internal problem({$e->getMessage()}). Please contact my creator!";
+		    
 	    }
 	    
 	    
-	    //check if second block has stack
-	    // if yes set each block to its initial position
 	    
-	    //change position of first block to position of second block
-	    // set first block as stack of second block
-	    if($firstBlock > 0 && $firstBlockIndex > -1){
-		    $this->blockCollection[$firstBlockIndex]->set_position((int)$this->command->get_secondBlock());
-	    }
     }
     
-    private function moveBlockOver(){
+    private function moveBlockOver()
+    {
     
     	die('moveBlockOver');
     }
     
-    private function pileBlockStackOnto(){
+    private function pileBlockStackOnto()
+    {
     
         die('pileBlockStackOnto');
     }
 	
-	private function pileBlockStackOver(){
+	private function pileBlockStackOver()
+	{
 	
 		die('pileBlockStackOver');
 	}
 	
-	
-	private function emptyStackBlock(Block $block){
- 
+	/**
+	 * empty stack of a particular block
+	 * @param Block $block
+	 */
+	private function emptyStackBlock(Block $block)
+	{
+		
+		if($block->has_stack()){
+			foreach($block->get_stack()->getIterator() as $blockItem){
+				
+				if($blockItem->has_stack()){
+					
+					return $this->emptyStackBlock($blockItem);
+				}else{
+					
+					//set block position to initial
+					$blockItem->set_actualPosition($blockItem->get_initialPosition());
+					
+					//pop block out of stack
+					$block->get_stack()->getIterator()->remove();
+					return;
+				}
+			}
+		}
 	}
 
 }

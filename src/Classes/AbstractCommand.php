@@ -8,4 +8,5 @@ abstract class AbstractCommand{
 	protected $secondBlock;
 	protected $fistPartValues = ['move','pile'];
 	protected $secondPartValues = ['over','onto'];
+	protected $exitCommand = 'quit';
 }

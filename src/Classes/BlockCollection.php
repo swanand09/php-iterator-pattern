@@ -13,11 +13,13 @@ class BlockCollection implements \IteratorAggregate{
 
     private $listBlocks= [];
     
-    public function set_numBlocks($num){
+    public function set_numBlocks($num)
+    {
     	
     	$this->numBlocks = $num;
     }
-	public function get_numBlocks(){
+	public function get_numBlocks()
+	{
     	
     	return $this->numBlocks;
 	}
