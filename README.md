@@ -1,7 +1,7 @@
 # salesfloor robotscript test
 
 ## Installation
--  Requirement: PHP 7, nginx, php-fpm, composer
+-  Requirement installation environment: PHP 7, composer
 -  do ```composer install ```
 - to run the application, do ``` php block-arranger.php ``` and follow commands instruction
 
