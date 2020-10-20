@@ -18,10 +18,8 @@ class Command extends AbstractCommand{
 	
 	public function get_exitCommand()
 	{
-	
+		return $this->exitCommand;
 	}
-	
-	
 	
 	public function set_firstPart($firstPart)
 	{

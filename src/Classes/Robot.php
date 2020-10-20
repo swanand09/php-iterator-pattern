@@ -3,6 +3,7 @@
 namespace App\Classes;
 
 use App\Classes\Command;
+use App\Classes\BlockCollection;
 
 class Robot {
 
@@ -14,6 +15,20 @@ class Robot {
     function __construct(){
 	
 	    $this->command = new Command();
+    }
+	
+	/**
+	 * maximum blocks allowed
+	 * @return int
+	 */
+    public function getMaxBlocks() :int
+    {
+    	return BlockCollection::maxBlocks;
+    }
+    
+    public function get_command()
+    {
+    	return $this->command;
     }
 	
     public function get_blockCollection()
@@ -42,10 +57,15 @@ class Robot {
 	
 	public function validateCommand($commandText)
 	{
+		if($this->command->get_exitCommand()!=$commandText) {
+			
+			$textSplit = explode(" ", $commandText);
+			if (sizeof($textSplit) == 4) {
 		
-		$textSplit = explode(" ",$commandText);
-		if(sizeof($textSplit)==4){
-			return $this->handleCommand($textSplit);
+				return $this->handleCommand($textSplit);
+			}
+		}else{
+			$this->message="exit command";
 		}
 		
 		return false;
@@ -187,19 +207,19 @@ class Robot {
     private function moveBlockOver()
     {
     
-    	die('moveBlockOver');
+    	echo 'moveBlockOver'.PHP_EOL;
     }
     
     private function pileBlockStackOnto()
     {
     
-        die('pileBlockStackOnto');
+        echo 'pileBlockStackOnto'.PHP_EOL;
     }
 	
 	private function pileBlockStackOver()
 	{
 	
-		die('pileBlockStackOver');
+		echo 'pileBlockStackOver'.PHP_EOL;
 	}
 	
 	/**
