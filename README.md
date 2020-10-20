@@ -5,6 +5,8 @@
 -  do ```composer install ```
 - to run the application, do ``` php block-arranger.php ``` and follow commands instruction
 
+- To run unit testing, do ``` php tests.php 10 ``` feel free to pass any number as parameter its a random commands
+ generator
 
 ## Spec:
 - `onto` -> immediate above or just ontop of
