@@ -1,8 +1,8 @@
 <?php
-namespace App;
+namespace App\Tests;
 
 use App\Classes\BlockArranger;
-use App\Classes\Robot;
+//use App\Classes\Robot;
 
 class UnitTest{
 	
@@ -26,7 +26,7 @@ class UnitTest{
 	public function generateRandomCommand()
 	{
 		$blockArranger = new BlockArranger();
-		$numBlocks = rand(2,$blockArranger->robot->getMaxBlocks());
+		$numBlocks = rand(2,$blockArranger->robot->get_maxBlocks());
 		$blockArranger->robot->generateBlockCollection($numBlocks);
 		
 		for($i=0;$i<$this->maxCommand;$i++){

@@ -66,7 +66,7 @@ class BlockArranger{
 			
 		}else {
 			
-			if ($num > 0) {
+			if ($num > 0 && $num<=$this->robot->get_maxBlocks()) {
 				
 				$this->printText("You have $num blocks");
 				$this->robot->generateBlockCollection($num);
@@ -75,7 +75,7 @@ class BlockArranger{
 				$this->handleUserInput(true);
 			} else {
 				
-				$this->printText("Wrong value! Please input a number greater than 0!");
+				$this->printText("Wrong value! Please input a number within range 2 <= n <={$this->robot->get_maxBlocks()}!");
 				$this->handleUserInput();
 			}
 		}

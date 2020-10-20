@@ -54,13 +54,13 @@ class BlocksOrderIterator implements \Iterator {
 	
 	public function set_position($position)
 	{
-		$this->position = $position;
+		$this->position = $position-1;
 	}
 	
 	public function remove()
 	{
 		if($this->valid()){
-			unset($this->collection->getBlocks()[$this->position]);
+			$this->collection->unsetBlock($this->position);
 		}
 	}
 }

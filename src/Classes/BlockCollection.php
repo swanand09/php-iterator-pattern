@@ -13,6 +13,8 @@ class BlockCollection implements \IteratorAggregate{
 
     private $listBlocks= [];
     
+    private $blockOrderIterator;
+    
     public function set_numBlocks($num)
     {
     	
@@ -33,10 +35,20 @@ class BlockCollection implements \IteratorAggregate{
 	{
 		$this->listBlocks[] = $block;
 	}
+
+	public function unsetBlock($position)
+	{
+		unset($this->listBlocks[$position]);
+	}
+	
+	public function setIterator()
+	{
+		$this->blockOrderIterator = new BlocksOrderIterator($this);
+	}
 	
 	public function getIterator(): Iterator
 	{
-		return new BlocksOrderIterator($this);
+		return $this->blockOrderIterator;
 	}
 	
 	public function getReverseIterator(): Iterator

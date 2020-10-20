@@ -21,7 +21,7 @@ class Robot {
 	 * maximum blocks allowed
 	 * @return int
 	 */
-    public function getMaxBlocks() :int
+    public function get_maxBlocks() :int
     {
     	return BlockCollection::maxBlocks;
     }
@@ -166,13 +166,15 @@ class Robot {
     private function moveBlockOnto()
     {
      
-    	$firstBlock = new Block();
-    	$secondBlock = new Block();
+    	//$firstBlock = new Block();
+    	//$secondBlock = new Block();
     	
 	    try {
 		    
 	    	//lookup firstBlock from collection
+		    $this->blockCollection->setIterator();
 		    $this->blockCollection->getIterator()->set_position((int)$this->command->get_firstBlock());
+		   
 		    $firstBlock = $this->blockCollection->getIterator()->current();
 		
 		    //check if first block has stack
@@ -189,12 +191,13 @@ class Robot {
 		    $this->emptyStackBlock($secondBlock);
 		    
 		    //add firstBlock as stack of secondBlock;
-		    $collection = new BlockCollection();
-		    $collection->addBlock($firstBlock);
-		    $secondBlock->set_stack($collection);
+		    $secondBlock->get_stack()->addBlock($firstBlock);
+		    
+		    //set actual position of first block to the initial position of second block;
+		    $firstBlock->set_actualPosition($secondBlock->get_initialPosition());
 		    
 		    
-	    }catch (Exception $e){
+	    }catch (\Exception $e){
 	    	
 		    $this->message = "Got an internal problem({$e->getMessage()}). Please contact my creator!";
 		    
@@ -230,20 +233,25 @@ class Robot {
 	{
 		
 		if($block->has_stack()){
-			foreach($block->get_stack()->getIterator() as $blockItem){
-				
-				if($blockItem->has_stack()){
+			try {
+				$block->get_stack()->setIterator();
+				foreach ($block->get_stack()->getIterator() as $blockItem) {
 					
-					return $this->emptyStackBlock($blockItem);
-				}else{
-					
-					//set block position to initial
-					$blockItem->set_actualPosition($blockItem->get_initialPosition());
-					
-					//pop block out of stack
-					$block->get_stack()->getIterator()->remove();
-					return;
+					if ($blockItem->has_stack()) {
+						
+						return $this->emptyStackBlock($blockItem);
+					} else {
+						
+						//set block position to initial
+						$blockItem->set_actualPosition($blockItem->get_initialPosition());
+						
+						//pop block out of stack
+						$block->get_stack()->getIterator()->remove();
+						return;
+					}
 				}
+			}catch(\Exception $e){
+				$this->message="Error!";
 			}
 		}
 	}
