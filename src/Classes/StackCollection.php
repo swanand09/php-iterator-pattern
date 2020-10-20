@@ -3,8 +3,9 @@ namespace App\Classes;
 
 use Iterator;
 use App\Classes\Block;
-use App\Classes\BlocksOrderIterator;
+use App\Classes\StacksOrderIterator;
 
+//A collection of blockCollection
 class StackCollection implements \IteratorAggregate{
 
     const maxStacks  = 25;
@@ -14,7 +15,17 @@ class StackCollection implements \IteratorAggregate{
     private $listStacks= [];
     
     private $stackOrderIterator;
-    
+	
+	public function set_numBlocks($num)
+	{
+		
+		$this->numBlocks = $num;
+	}
+	public function get_numBlocks()
+	{
+		
+		return $this->numBlocks;
+	}
     
 	public function getStacks()
 	{

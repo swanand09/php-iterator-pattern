@@ -6,7 +6,7 @@ use App\Classes\StackCollection;
 class StacksOrderIterator implements \Iterator {
 
 	/**
-	* @var BlockCollection
+	* @var StackCollection
 	*/
 	private $collection;
 	
@@ -29,12 +29,12 @@ class StacksOrderIterator implements \Iterator {
 	public function rewind()
 	{
 		$this->position = $this->reverse ?
-		count($this->collection->getBlocks()) - 1 : 0;
+		count($this->collection->getStacks()) - 1 : 0;
 	}
 	
 	public function current()
 	{
-		return $this->collection->getBlocks()[$this->position];
+		return $this->collection->getStacks()[$this->position];
 	}
 	
 	public function key()
@@ -49,7 +49,7 @@ class StacksOrderIterator implements \Iterator {
 	
 	public function valid()
 	{
-		return isset($this->collection->getBlocks()[$this->position]);
+		return isset($this->collection->getStacks()[$this->position]);
 	}
 	
 	public function set_position($position)

@@ -9,7 +9,7 @@ class Block extends AbstractBlock {
     private $initialPosition;
     private $name;
     
-    private $stack;
+   // private $stack;
     
     //order in the current stack
     private $order;
@@ -19,14 +19,14 @@ class Block extends AbstractBlock {
 
     function __construct()
     {
-		$this->stack = new BlockCollection();
+		//$this->stack = new BlockCollection();
     }
 	
     public function set_stack(BlockCollection $stack)
     {
     	$this->stack = $stack;
     }
-	public function get_stack()
+	/*public function get_stack()
 	{
 		return $this->stack;
 	}
@@ -35,7 +35,7 @@ class Block extends AbstractBlock {
 	{
 		//echo 'count: '.count($this->stack->getBlocks()).PHP_EOL;
     	return count($this->stack->getBlocks()) > 0;
-	}
+	}*/
     
     
     public function set_initialPosition($initialPosition)

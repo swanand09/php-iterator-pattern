@@ -4,13 +4,14 @@ namespace App\Classes;
 
 use App\Classes\Command;
 use App\Classes\BlockCollection;
+use App\Classes\StackCollection;
 
 class Robot {
 
     private $command;
     private $message;
     
-    private $blockCollection;
+    private $stackCollection;
 
     function __construct(){
 	
@@ -31,10 +32,10 @@ class Robot {
     	return $this->command;
     }
 	
-    public function get_blockCollection()
+    public function get_stackCollection()
     {
     	
-    	return $this->blockCollection;
+    	return $this->stackCollection;
     }
     
 	/**
@@ -43,15 +44,17 @@ class Robot {
 	 */
 	public function generateBlockCollection($num)
 	{
-		$this->blockCollection = new BlockCollection();
+		$this->stackCollection = new StackCollection();
 		for($i=1;$i<=$num;$i++){
 			$block = new Block();
 			$block->set_name($i);
 			$block->set_initialPosition($i);
 			$block->set_actualPosition($i);
-			$this->blockCollection->addBlock($block);
+			$blockCollection  = new BlockCollection();
+			$blockCollection->addBlock($block);
+			$this->stackCollection->addStack($blockCollection);
 		}
-		$this->blockCollection->set_numBlocks($num);
+		$this->stackCollection->set_numBlocks($num);
 		
 	}
 	
@@ -87,9 +90,9 @@ class Robot {
         
         list($firstPart,$firstBlock,$secondPart,$secondBlock) = $textSplit;
         
-        if($firstBlock <= $this->blockCollection->get_numBlocks()) {
+        if($firstBlock <= $this->stackCollection->get_numBlocks()) {
 	
-	        if($secondBlock <= $this->blockCollection->get_numBlocks()) {
+	        if($secondBlock <= $this->stackCollection->get_numBlocks()) {
 		
 		        if ($firstBlock != $secondBlock) {
 			
@@ -127,10 +130,10 @@ class Robot {
 			        $this->message = "Pile or move same block is not allowed. Please try again!";
 		        }
 	        }else{
-		        $this->message = "The second block cannot be greater than the total number of blocks $this->blockCollection->get_numBlocks(). Please try again!";
+		        $this->message = "The second block cannot be greater than the total number of blocks $this->stackCollection->get_numBlocks(). Please try again!";
 	        }
         }else{
-	        $this->message = "The first block cannot be greater than the total number of blocks $this->blockCollection->get_numBlocks(). Please try again!";
+	        $this->message = "The first block cannot be greater than the total number of blocks $this->stackCollection->get_numBlocks(). Please try again!";
         }
         
         return false;
@@ -166,25 +169,39 @@ class Robot {
     private function moveBlockOnto()
     {
      
-    	//$firstBlock = new Block();
+    	$firstBlock = new Block();
     	//$secondBlock = new Block();
     	
 	    try {
 		    
 	    	//lookup firstBlock from collection
-		    $this->blockCollection->setIterator();
-		    $this->blockCollection->getIterator()->set_position((int)$this->command->get_firstBlock());
-		   
-		    $firstBlock = $this->blockCollection->getIterator()->current();
-		
+		    $this->stackCollection->setIterator();
+		    
+		    //attempt to check if the block based on its name or initial position is on same stack as initially set
+		    $this->stackCollection->getIterator()->set_position((int)$this->command->get_firstBlock());
+		    $blockCollection = $this->stackCollection->getIterator()->current();
+			$blockCollection->setIterator();
+			foreach($blockCollection->getIterator() as $block){
+			
+				if($block->get_initalPosition()==(int)$this->command->get_firstBlock()){
+					$firstBlock = $block;
+					
+					//verify if there are other blocks on top of firstBlock and reinitialise their positions
+					$this->reinitialiseBlockPosition($blockCollection);
+					break;
+				}
+			}
+			
+		    
+		    /*
 		    //check if first block has stack
 		    // if yes set each block to its initial position
 		    $this->emptyStackBlock($firstBlock);
 			
 		
 		    //lookup secondBlock from collection
-		    $this->blockCollection->getIterator()->set_position((int)$this->command->get_secondBlock());
-		    $secondBlock = $this->blockCollection->getIterator()->current();
+		    $this->stackCollection->getIterator()->set_position((int)$this->command->get_secondBlock());
+		    $secondBlock = $this->stackCollection->getIterator()->current();
 		
 		    //check if second block has stack
 		    // if yes set each block to its initial position
@@ -195,12 +212,11 @@ class Robot {
 		    
 		    //set actual position of first block to the initial position of second block;
 		    $firstBlock->set_actualPosition($secondBlock->get_initialPosition());
-		    
+		    */
 		    
 	    }catch (\Exception $e){
 	    	
 		    $this->message = "Got an internal problem({$e->getMessage()}). Please contact my creator!";
-		    
 	    }
 	    
 	    
@@ -225,6 +241,45 @@ class Robot {
 		echo 'pileBlockStackOver'.PHP_EOL;
 	}
 	
+	//add block back to initial position in the stack
+	private function reinitialiseBlockPosition($blockCollection)
+	{
+		if($blockCollection->getIterator()->next() && $blockCollection->getIterator()->valid()){
+		
+			$block =  $blockCollection->getIterator()->current();
+			
+			//go in Stack to add block back to initial position
+			//$this->searchStackCollection($block);
+			
+			$this->stackCollection->getIterator()->set_position($block->get_initialPosition());
+			$blockCollection = $this->stackCollection->getIterator()->current();
+			$blockCollection->addBlock($block);
+			
+			$this->reinitialiseBlockPosition($blockCollection);
+		}
+	}
+	
+	/*
+	//add block back to initial position in the stack
+	private function searchStackCollection($position)
+	{
+			$this->stackCollection->getIterator()->set_position((int)$this->command->get_firstBlock());
+		    $blockCollection = $this->stackCollection->getIterator()->current();
+			$blockCollection->setIterator();
+			foreach($blockCollection->getIterator() as $block){
+			
+				if($block->get_initalPosition()==(int)$this->command->get_firstBlock()){
+					$firstBlock = $block;
+					
+					//verify if there are other blocks on top of firstBlock and reinitialise their positions
+					$this->reinitialiseBlockPosition($blockCollection);
+					break;
+				}
+			}
+	}
+	*/
+	
+	
 	/**
 	 * empty stack of a particular block
 	 * @param Block $block
@@ -233,6 +288,7 @@ class Robot {
 	{
 		
 		if($block->has_stack()){
+			
 			try {
 				$block->get_stack()->setIterator();
 				foreach ($block->get_stack()->getIterator() as $blockItem) {
@@ -251,6 +307,7 @@ class Robot {
 					}
 				}
 			}catch(\Exception $e){
+				
 				$this->message="Error!";
 			}
 		}
