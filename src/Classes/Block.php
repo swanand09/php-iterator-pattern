@@ -8,7 +8,7 @@ class Block extends AbstractBlock {
     private $initialPosition;
     private $name;
     
-    private $stackCollection;
+    private $stack;
     
     //order in the current stack
     private $order;
@@ -21,11 +21,15 @@ class Block extends AbstractBlock {
 
     }
 	
-    public function set_stackCollection($stackCollection){
-    	$this->stackCollection = $stackCollection;
+    public function set_stack($stack){
+    	$this->stack = $stack;
     }
-	public function get_stackCollection(){
-		return $this->stackCollection;
+	public function get_stack(){
+		return $this->stack;
+	}
+	
+	public function hasStack(){
+    	return count($this->stack) > 0;
 	}
     
     

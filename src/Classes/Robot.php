@@ -144,14 +144,19 @@ class Robot {
         //check if first block has stack
 	    // if yes set each block to its initial position
 	    try {
+		    $firstBlock= 0;
+		    $firstBlockIndex = -1;
 		    foreach ($this->blockCollection->getIterator() as $block) {
 			    if($block->get_name()==(int)$this->command->get_firstBlock()){
-			    	
+			    	$firstBlock = $block;
+			    	$firstBlockIndex = $this->blockCollection->getIterator()->key();
 			    	if(count($block->getStackCollection())>0){
 					    foreach ($block->getStackCollection->getIterator() as $block) {
 					    
 					    }
 				    }
+			    	
+			    	$block->set_position((int)$this->command->get_secondBlock());
 			    }
 		    }
 	    }catch (Exception $e){
@@ -165,6 +170,9 @@ class Robot {
 	    
 	    //change position of first block to position of second block
 	    // set first block as stack of second block
+	    if($firstBlock > 0 && $firstBlockIndex > -1){
+		    $this->blockCollection[$firstBlockIndex]->set_position((int)$this->command->get_secondBlock());
+	    }
     }
     
     private function moveBlockOver(){
@@ -180,6 +188,11 @@ class Robot {
 	private function pileBlockStackOver(){
 	
 		die('pileBlockStackOver');
+	}
+	
+	
+	private function emptyStackBlock(Block $block){
+ 
 	}
 
 }
