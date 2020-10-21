@@ -5,9 +5,8 @@
 -  do ```composer install ```
 - to run the application, do ``` php robots.php input1.txt``` and wait for print result
 
-- To run unit testing, do ``` php tests.php 10 ``` feel free to pass any number as parameter its a random commands
- generator
-
+- To run unit testing, do ``` php tests.php 10 ``` feel free to pass any number as parameter, its the number of
+ commands generated for a random number of blocks between 2 and 25
 ## Spec:
 - `onto` -> immediate above or just ontop of
 - `over` -> anywhere above 

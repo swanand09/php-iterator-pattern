@@ -28,7 +28,8 @@ class UnitTest{
 		$blockArranger = new BlockArranger();
 		$numBlocks = rand(2,$blockArranger->robot->get_maxBlocks());
 		$blockArranger->robot->generateBlockCollection($numBlocks);
-		
+	
+		$blockArranger->printText("You have $numBlocks blocks");
 		for($i=0;$i<$this->maxCommand;$i++){
 			
 			$textSplit = [];

@@ -182,7 +182,7 @@ class Robot {
 				    //set actual position of first block to the initial position of second block;
 				    $detached_firstBlock->set_actualPosition($secondBlockPosition);
 				    //add firstBlock as stack of secondBlock;
-				    if(!is_null($detached_firstBlock)) {
+				    if(!is_null($secondBlock_blockCollection)) {
 					    $secondBlock_blockCollection->addBlock($detached_firstBlock);
 				    }else{
 				    	echo 'test';
@@ -277,12 +277,14 @@ class Robot {
 							$blockCollection->getIterator()->remove();
 							//verify if there are other blocks on top of firstBlock, reinitialise their positions
 							$this->reinitialiseBlockPosition($blockCollection);
+							$blockCollection->reindexBlock();
 							return $block;
 							break;
 						
 						case "secondBlock":
 							//verify if there are other blocks on top of firstBlock, reinitialise their positions
 							$this->reinitialiseBlockPosition($blockCollection);
+							$blockCollection->reindexBlock();
 							return $blockCollection;
 							break;
 					}
@@ -299,6 +301,7 @@ class Robot {
 							$blockCollection->getIterator()->remove();
 							//verify if there are other blocks on top of firstBlock, reinitialise their positions
 							$this->reinitialiseBlockPosition($blockCollection);
+							$blockCollection->reindexBlock();
 							return $block;
 							break;
 						
@@ -327,6 +330,7 @@ class Robot {
 						case "secondBlock":
 							//verify if there are other blocks on top of firstBlock, reinitialise their positions
 							$this->reinitialiseBlockPosition($blockCollection);
+							$blockCollection->reindexBlock();
 							return $blockCollection;
 							break;
 					}
