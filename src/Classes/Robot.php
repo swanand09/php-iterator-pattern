@@ -175,55 +175,42 @@ class Robot {
 	    try {
 		    
 	    	//lookup firstBlock from collection
-		    
 		    //attempt to check if the block based on its name or initial position is on same stack as initially set
 		    $blockPosition = ((int)$this->command->get_firstBlock()-1);
 		    $blockName = (int)$this->command->get_firstBlock();
 		    
 		    //Quick Lookup
-		    $firstBlockDetached = $this->searchStackByPosition($blockName,$blockPosition);
+		    $firstBlockDetached = $this->searchStackByPosition($blockName,$blockPosition,'firstBlock');
 		    
 		    if(is_null($firstBlockDetached)){
 		     
 		    	//search entire stack collection
-			    $firstBlockDetached = $this->searchStackCollection($blockName,$blockPosition);
+			    $firstBlockDetached = $this->searchStackCollection($blockName,$blockPosition,'firstBlock');
 		    }
-		    
-		    
-		    
-		    
-		    
-		
-		    //$firstBlock->set_actualPosition()
-			   
-		    
-		    /*
-		    //check if first block has stack
-		    // if yes set each block to its initial position
-		    $this->emptyStackBlock($firstBlock);
-			
 		
 		    //lookup secondBlock from collection
-		    $this->stackCollection->getIterator()->set_position((int)$this->command->get_secondBlock());
-		    $secondBlock = $this->stackCollection->getIterator()->current();
+		    $secondBlockPosition = ((int)$this->command->get_secondBlock()-1);
+		    $secondBlockName = (int)$this->command->get_secondBlock();
+				
+		    //Quick Lookup
+		    $secondBlock_blockCollection = $this->searchStackByPosition($secondBlockName,$secondBlockPosition,'secondBlock');
 		
-		    //check if second block has stack
-		    // if yes set each block to its initial position
-		    $this->emptyStackBlock($secondBlock);
-		    
-		    //add firstBlock as stack of secondBlock;
-		    $secondBlock->get_stack()->addBlock($firstBlock);
-		    
+		    if(is_null($secondBlock_blockCollection)){
+			
+			    //search entire stack collection
+			    $secondBlock_blockCollection = $this->searchStackCollection($secondBlockName,$secondBlockPosition,'secondBlock');
+		    }
+		
 		    //set actual position of first block to the initial position of second block;
-		    $firstBlock->set_actualPosition($secondBlock->get_initialPosition());
-		    */
+		    $firstBlockDetached->set_actualPosition($secondBlockPosition);
+		    //add firstBlock as stack of secondBlock;
+		    $secondBlock_blockCollection->addBlock($firstBlockDetached);
+				  
 		    
 	    }catch (\Exception $e){
 	    	
 		    $this->message = "Got an internal problem({$e->getMessage()}). Please contact my creator!";
 	    }
-	    
-	    
 	    
     }
     
@@ -246,60 +233,57 @@ class Robot {
 	}
 	
 	
-	/**
-	 * search stack for block at given position
-	 * @param $name
-	 * @param $position
-	 * @return mixed|null
-	 */
-	private function searchStackByPosition($name,$position)
+	
+	//search stack for block at given position
+	private function searchStackByPosition($name,$position,$whichBlock)
 	{
 		$this->stackCollection->setIterator();
 		$this->stackCollection->getIterator()->set_position($position);
 		$blockCollection = $this->stackCollection->getIterator()->current();
-		return $this->searchBlockByName($blockCollection,$name);
+		return $this->searchBlockByName($blockCollection,$name,$whichBlock);
 	}
 	
 	
-	/**
-	 * search block from entire stack collection given its name
-	 * @param $name
-	 * @param $positionToOmit
-	 * @return mixed|null
-	 */
-	private function searchStackCollection($name,$positionToOmit)
+	
+	// search block from entire stack collection given its name
+	private function searchStackCollection($name,$positionToOmit,$whichBlock)
 	{
 		$this->stackCollection->setIterator();
 		foreach($this->stackCollection->getIterator() as $blockCollection){
 			
 			if($this->stackCollection->getIterator()->key()!=$positionToOmit){ // already look into this position
 				
-				return $this->searchBlockByName($blockCollection,$name);
+				return $this->searchBlockByName($blockCollection,$name,$whichBlock);
 			}
 		}
 	}
 	
 	
-	/**
-	 * search block by name, given block collection
-	 * @param $blockCollection
-	 * @param $name
-	 * @return mixed|null
-	 */
-	private function searchBlockByName($blockCollection,$name)
+	
+	//search block by name, given block collection
+	private function searchBlockByName($blockCollection,$name,$whichBlock)
 	{
 		$blockCollection->setIterator();
 		foreach ($blockCollection->getIterator() as $block) {
 			
 			if ($block->get_name() == $name) {
 				
-				
-				//remove block from block collection
-				$blockCollection->getIterator()->remove();
-				
-				//verify if there are other blocks on top of firstBlock, reinitialise their positions
-				$this->reinitialiseBlockPosition($blockCollection);
-				return $block;
+				switch($whichBlock){
+					
+					case "firstBlock":
+						//remove block from block collection
+						$blockCollection->getIterator()->remove();
+						//verify if there are other blocks on top of firstBlock, reinitialise their positions
+						$this->reinitialiseBlockPosition($blockCollection);
+						return $block;
+					break;
+					
+					case "secondBlock":
+						//verify if there are other blocks on top of firstBlock, reinitialise their positions
+						$this->reinitialiseBlockPosition($blockCollection);
+						return $blockCollection;
+					break;
+				}
 			}
 		}
 		return null;
@@ -329,10 +313,7 @@ class Robot {
 		}
 	}
 	
-	/**
-	 * empty stack of a particular block
-	 * @param Block $block
-	 */
+	
 	/*
 	private function emptyStackBlock(Block $block)
 	{
