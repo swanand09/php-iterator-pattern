@@ -1,9 +1,9 @@
 <?php
 namespace  App\Classes;
 
-use App\Classes\BlockInterface;
-
-abstract class AbstractBlock implements BlockInterface {
-
-    
+abstract class AbstractBlock {
+	
+	protected $actualPosition;
+	protected $initialPosition;
+	protected $name;
 }

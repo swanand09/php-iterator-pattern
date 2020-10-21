@@ -5,39 +5,6 @@ use App\Classes\BlockCollection;
 
 class Block extends AbstractBlock {
 
-    private $actualPosition;
-    private $initialPosition;
-    private $name;
-    
-   // private $stack;
-    
-    //order in the current stack
-    private $order;
-
-
-
-
-    function __construct()
-    {
-		//$this->stack = new BlockCollection();
-    }
-	
-    public function set_stack(BlockCollection $stack)
-    {
-    	$this->stack = $stack;
-    }
-	/*public function get_stack()
-	{
-		return $this->stack;
-	}
-	
-	public function has_stack()
-	{
-		//echo 'count: '.count($this->stack->getBlocks()).PHP_EOL;
-    	return count($this->stack->getBlocks()) > 0;
-	}*/
-    
-    
     public function set_initialPosition($initialPosition)
     {
     	
