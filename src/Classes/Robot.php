@@ -182,7 +182,11 @@ class Robot {
 				    //set actual position of first block to the initial position of second block;
 				    $detached_firstBlock->set_actualPosition($secondBlockPosition);
 				    //add firstBlock as stack of secondBlock;
-				    $secondBlock_blockCollection->addBlock($detached_firstBlock);
+				    if(!is_null($detached_firstBlock)) {
+					    $secondBlock_blockCollection->addBlock($detached_firstBlock);
+				    }else{
+				    	echo 'test';
+				    }
 				
 				    break;
 			    case 'App\Classes\BlockCollection':
@@ -208,13 +212,14 @@ class Robot {
 						    $secondBlock_blockCollection->addBlock($block);
 					    }
 					    //ensure right index in blockCollection
-					    $secondBlock_blockCollection->reindexBlock();
+					    //$secondBlock_blockCollection->reindexBlock();
 					   // $this->stackCollection->addStack($secondBlock_blockCollection);
 				    }
 				
+				    
 				    break;
 		    }
-		
+		    $secondBlock_blockCollection->reindexBlock();
 		
 	    }catch (\Exception $e){
 		
@@ -315,6 +320,7 @@ class Robot {
 							$newBlockCollection->addBlock($block);
 							$blockCollection->getIterator()->remove();
 							$this->getStackOfBlock($newBlockCollection,$blockCollection);
+							$newBlockCollection->reindexBlock();
 							return $newBlockCollection;
 							break;
 						
@@ -336,6 +342,7 @@ class Robot {
 							$newBlockCollection->addBlock($block);
 							$blockCollection->getIterator()->remove();
 							$this->getStackOfBlock($newBlockCollection,$blockCollection);
+							$newBlockCollection->reindexBlock();
 							return $newBlockCollection;
 							break;
 						
@@ -379,7 +386,7 @@ class Robot {
 			$initialBlockCollection = $this->stackCollection->getIterator()->current();
 			$block->set_actualPosition($block->get_initialPosition());
 			$initialBlockCollection->addBlock($block);
-			
+			$initialBlockCollection->reindexBlock();
 			$blockCollection>getIterator()->remove();
 			
 			//do same for next block in the stack
@@ -398,6 +405,7 @@ class Robot {
 			
 			$blockCollection->setIterator();
 			$stackText = '';
+			$blockCollection->reindexBlock();
 			foreach($blockCollection->getIterator() as $block){
 				$stackText .= $block->get_name().' ';
 				
