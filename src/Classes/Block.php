@@ -48,12 +48,12 @@ class Block extends AbstractBlock {
 		return $this->initialPosition;
 	}
 	
-	public function set_name($name)
+	public function set_name(int $name)
 	{
   
 		$this->name = $name;
 	}
-	public function get_name()
+	public function get_name(): int
 	{
   
 		return $this->name;

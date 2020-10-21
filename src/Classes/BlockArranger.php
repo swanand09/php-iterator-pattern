@@ -26,6 +26,34 @@ class BlockArranger{
 		$this->handleUserInput();
 	}
 	
+	public function readInput()
+	{
+		$paramHandle = fopen ("php://stdin","r");
+		$filename = fgets($paramHandle);
+		$filename = trim($filename);
+		$InputArr = file($filename);
+		
+		// Loop through our array, show HTML source as HTML source; and line numbers too.
+		foreach ($InputArr as $line_num => $line) {
+			echo "Line #<b>{$line_num}</b> : " . htmlspecialchars($line) . "<br />\n";
+		}
+		
+		$handle = fopen("$filename", "r")or die("Unable to open file!");
+		
+	}
+	
+	
+	/*
+	public function init()
+	{
+		$this->printText("Enter number of blocks: ");
+		$this->handleUserInput();
+	}
+	*/
+	
+	
+	
+	
 	public function handleUserInput($command=false)
 	{
 		

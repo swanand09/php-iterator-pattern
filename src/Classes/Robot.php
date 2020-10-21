@@ -48,8 +48,8 @@ class Robot {
 		for($i=1;$i<=$num;$i++){
 			$block = new Block();
 			$block->set_name($i);
-			$block->set_initialPosition($i);
-			$block->set_actualPosition($i);
+			$block->set_initialPosition(($i-1));
+			$block->set_actualPosition(($i-1));
 			$blockCollection  = new BlockCollection();
 			$blockCollection->addBlock($block);
 			$this->stackCollection->addStack($blockCollection);
@@ -169,29 +169,31 @@ class Robot {
     private function moveBlockOnto()
     {
      
-    	$firstBlock = new Block();
+    	//$firstBlock = new Block();
     	//$secondBlock = new Block();
     	
 	    try {
 		    
 	    	//lookup firstBlock from collection
-		    $this->stackCollection->setIterator();
 		    
 		    //attempt to check if the block based on its name or initial position is on same stack as initially set
-		    $this->stackCollection->getIterator()->set_position((int)$this->command->get_firstBlock());
-		    $blockCollection = $this->stackCollection->getIterator()->current();
-			$blockCollection->setIterator();
-			foreach($blockCollection->getIterator() as $block){
-			
-				if($block->get_initalPosition()==(int)$this->command->get_firstBlock()){
-					$firstBlock = $block;
-					
-					//verify if there are other blocks on top of firstBlock and reinitialise their positions
-					$this->reinitialiseBlockPosition($blockCollection);
-					break;
-				}
-			}
-			
+		    $blockPosition = ((int)$this->command->get_firstBlock()-1);
+		    $blockName = (int)$this->command->get_firstBlock();
+		    $firstBlock = $this->searchStackByPosition($blockName,$blockPosition);
+		    
+		    if(is_null($firstBlock)){
+		     
+		    	//search entire stack collection
+			    $firstBlock = $this->searchStackCollection($blockName,$blockPosition);
+		    }
+		    
+		    
+		    
+		    
+		    
+		
+		    //$firstBlock->set_actualPosition()
+			   
 		    
 		    /*
 		    //check if first block has stack
@@ -248,36 +250,60 @@ class Robot {
 		
 			$block =  $blockCollection->getIterator()->current();
 			
-			//go in Stack to add block back to initial position
-			//$this->searchStackCollection($block);
-			
+			//return block to its initial position in the stack collection
 			$this->stackCollection->getIterator()->set_position($block->get_initialPosition());
 			$blockCollection = $this->stackCollection->getIterator()->current();
 			$blockCollection->addBlock($block);
 			
+			//block in the stack
 			$this->reinitialiseBlockPosition($blockCollection);
 		}
 	}
 	
-	/*
-	//add block back to initial position in the stack
-	private function searchStackCollection($position)
+	
+	//search stack for block at given position
+	private function searchStackByPosition($name,$position)
 	{
-			$this->stackCollection->getIterator()->set_position((int)$this->command->get_firstBlock());
-		    $blockCollection = $this->stackCollection->getIterator()->current();
-			$blockCollection->setIterator();
-			foreach($blockCollection->getIterator() as $block){
+		$this->stackCollection->setIterator();
+		$this->stackCollection->getIterator()->set_position($position);
+		$blockCollection = $this->stackCollection->getIterator()->current();
+		$blockCollection->setIterator();
+		foreach ($blockCollection->getIterator() as $block) {
 			
-				if($block->get_initalPosition()==(int)$this->command->get_firstBlock()){
-					$firstBlock = $block;
-					
-					//verify if there are other blocks on top of firstBlock and reinitialise their positions
-					$this->reinitialiseBlockPosition($blockCollection);
-					break;
-				}
+			if ($block->get_name() == $name) {
+				
+				//verify if there are other blocks on top of firstBlock and reinitialise their positions
+				$this->reinitialiseBlockPosition($blockCollection);
+				return $block;
 			}
+		}
+		return null;
 	}
-	*/
+	
+	//search block from entire stack collection given its name
+	private function searchStackCollection($name,$positionToOmit)
+	{
+		$this->stackCollection->setIterator();
+		foreach($this->stackCollection->getIterator() as $blockCollection){
+			
+			if($this->stackCollection->getIterator()->key()!=$positionToOmit){
+				
+				$blockCollection->setIterator();
+				foreach ($blockCollection->getIterator() as $block) {
+					
+					if ($block->get_name() == $name) {
+						
+						//verify if there are other blocks on top of firstBlock and reinitialise their positions
+						$this->reinitialiseBlockPosition($blockCollection);
+						return $block;
+					}
+				}
+				
+			}
+		
+		}
+	}
+	
 	
 	
 	/**
