@@ -60,6 +60,6 @@ class UnitTest{
 		}
 		
 		//display blocks stacks
-	
+		$blockArranger->robot->printResult();
 	}
 }

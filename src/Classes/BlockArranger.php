@@ -55,7 +55,7 @@ class BlockArranger{
 						}
 					} else {
 						//print table blocks and respective stacks
-						
+						$this->robot->printResult();
 						$this->printText("Humble servant always at your service! Bye!");
 						break;
 					}

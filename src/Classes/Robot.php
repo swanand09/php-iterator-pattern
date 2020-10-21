@@ -168,9 +168,6 @@ class Robot {
     
     private function moveBlockOnto()
     {
-     
-    	//$firstBlock = new Block();
-    	//$secondBlock = new Block();
     	
 	    try {
 		    
@@ -314,35 +311,21 @@ class Robot {
 	}
 	
 	
-	/*
-	private function emptyStackBlock(Block $block)
+	public function printResult()
 	{
+		$this->stackCollection->setIterator();
 		
-		if($block->has_stack()){
+		foreach($this->stackCollection->getIterator() as $blockCollection){
 			
-			try {
-				$block->get_stack()->setIterator();
-				foreach ($block->get_stack()->getIterator() as $blockItem) {
-					
-					if ($blockItem->has_stack()) {
-						
-						return $this->emptyStackBlock($blockItem);
-					} else {
-						
-						//set block position to initial
-						$blockItem->set_actualPosition($blockItem->get_initialPosition());
-						
-						//pop block out of stack
-						$block->get_stack()->getIterator()->remove();
-						return;
-					}
-				}
-			}catch(\Exception $e){
+			$blockCollection->setIterator();
+			$stackText = '';
+			foreach($blockCollection->getIterator() as $block){
+				$stackText .= $block->get_name().' ';
 				
-				$this->message="Error!";
 			}
+			echo ($this->stackCollection->getIterator()->key()+1) .": ". $stackText . PHP_EOL;
 		}
 	}
-	*/
+	
 
 }
