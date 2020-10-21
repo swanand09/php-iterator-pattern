@@ -31,14 +31,41 @@ class BlockArranger{
 		$paramHandle = fopen ("php://stdin","r");
 		$filename = fgets($paramHandle);
 		$filename = trim($filename);
-		$InputArr = file($filename);
+		$inputs = file($filename);
 		
-		// Loop through our array, show HTML source as HTML source; and line numbers too.
-		foreach ($InputArr as $line_num => $line) {
-			echo "Line #<b>{$line_num}</b> : " . htmlspecialchars($line) . "<br />\n";
+		if(!empty($inputs) && count($inputs)>1) {
+			$num = $inputs[0];
+			
+			if ($num > 0 && $num <= $this->robot->get_maxBlocks()) {
+				
+				$this->printText("You have $num blocks");
+				$this->robot->generateBlockCollection($num);
+				$commands = array_shift($inputs);
+				foreach ($commands as $command) {
+					
+					if($command!=$this->robot->get_command()->get_exitCommand()) {
+						//validate command
+						if ($this->robot->validateCommand($command)) {
+							
+							// execute command
+							$this->robot->executeCommand();
+						} else {
+							
+							$this->printText($this->robot->getMessage());
+							continue;
+						}
+					}else{
+						//print table blocks and respective stacks
+						
+						$this->printText("Humble servant always at your service! Bye!");
+						break;
+					}
+				}
+			} else {
+				
+				$this->printText("Wrong value! Please input a number within range 2 <= n <={$this->robot->get_maxBlocks()}!");
+			}
 		}
-		
-		$handle = fopen("$filename", "r")or die("Unable to open file!");
 		
 	}
 	
