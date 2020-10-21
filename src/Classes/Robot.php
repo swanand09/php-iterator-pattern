@@ -144,75 +144,6 @@ class Robot {
 	 */
     public function executeCommand()
     {
-
-    	//move a onto b
-        if($this->command->get_firstPart()=='move' && $this->command->get_secondPart() =='onto'){
-	        $this->moveBlockOnto();
-        }
-	
-        //move a over b
-	    if($this->command->get_firstPart()=='move' && $this->command->get_secondPart() =='over'){
-		    $this->moveBlockOver();
-	    }
-	
-	    //pile a onto b
-	    if($this->command->get_firstPart()=='pile' && $this->command->get_secondPart() =='onto'){
-		    $this->pileBlockStackOnto();
-	    }
-	    
-	    //pile a over b
-	    if($this->command->get_firstPart()=='pile' && $this->command->get_secondPart() =='over'){
-		    $this->pileBlockStackOver();
-	    }
-    }
-    
-    private function moveBlockOnto()
-    {
-    	
-	    try {
-		    
-	    	//lookup firstBlock from collection
-		    //attempt to check if the block based on its name or initial position is on same stack as initially set
-		    $blockPosition = ((int)$this->command->get_firstBlock()-1);
-		    $blockName = (int)$this->command->get_firstBlock();
-		    
-		    //Quick Lookup
-		    $firstBlockDetached = $this->searchStackByPosition($blockName,$blockPosition,'firstBlock');
-		    
-		    if(is_null($firstBlockDetached)){
-		     
-		    	//search entire stack collection
-			    $firstBlockDetached = $this->searchStackCollection($blockName,$blockPosition,'firstBlock');
-		    }
-		
-		    //lookup secondBlock from collection
-		    $secondBlockPosition = ((int)$this->command->get_secondBlock()-1);
-		    $secondBlockName = (int)$this->command->get_secondBlock();
-				
-		    //Quick Lookup
-		    $secondBlock_blockCollection = $this->searchStackByPosition($secondBlockName,$secondBlockPosition,'secondBlock');
-		
-		    if(is_null($secondBlock_blockCollection)){
-			
-			    //search entire stack collection
-			    $secondBlock_blockCollection = $this->searchStackCollection($secondBlockName,$secondBlockPosition,'secondBlock');
-		    }
-		
-		    //set actual position of first block to the initial position of second block;
-		    $firstBlockDetached->set_actualPosition($secondBlockPosition);
-		    //add firstBlock as stack of secondBlock;
-		    $secondBlock_blockCollection->addBlock($firstBlockDetached);
-				  
-		    
-	    }catch (\Exception $e){
-	    	
-		    $this->message = "Got an internal problem({$e->getMessage()}). Please contact my creator!";
-	    }
-	    
-    }
-    
-    private function moveBlockOver()
-    {
 	
 	    try {
 		
@@ -222,12 +153,12 @@ class Robot {
 		    $blockName = (int)$this->command->get_firstBlock();
 		
 		    //Quick Lookup
-		    $firstBlockDetached = $this->searchStackByPosition($blockName,$blockPosition,'firstBlock');
+		    $detached_firstBlock = $this->searchStackByPosition($blockName,$blockPosition,'firstBlock');
 		
-		    if(is_null($firstBlockDetached)){
+		    if(is_null($detached_firstBlock)){
 			
 			    //search entire stack collection
-			    $firstBlockDetached = $this->searchStackCollection($blockName,$blockPosition,'firstBlock');
+			    $detached_firstBlock = $this->searchStackCollection($blockName,$blockPosition,'firstBlock');
 		    }
 		
 		    //lookup secondBlock from collection
@@ -243,31 +174,37 @@ class Robot {
 			    $secondBlock_blockCollection = $this->searchStackCollection($secondBlockName,$secondBlockPosition,'secondBlock');
 		    }
 		
-		    //set actual position of first block to the initial position of second block;
-		    $firstBlockDetached->set_actualPosition($secondBlockPosition);
-		    //add firstBlock as stack of secondBlock;
-		    $secondBlock_blockCollection->addBlock($firstBlockDetached);
+		
+		
+		    switch(get_class($detached_firstBlock)){
+			    case 'Block':
+				
+				    //set actual position of first block to the initial position of second block;
+				    $detached_firstBlock->set_actualPosition($secondBlockPosition);
+				    //add firstBlock as stack of secondBlock;
+				    $secondBlock_blockCollection->addBlock($detached_firstBlock);
+				
+				    break;
+			    case 'BlockCollection':
+				
+				    $firstBlockCollection = $detached_firstBlock;
+				    $firstBlockCollection->setIterator();
+				    foreach($firstBlockCollection->getIterator() as $block){
+					
+					    $secondBlock_blockCollection->addBlock($block);
+				    }
+				
+				    break;
+		    }
 		
 		
 	    }catch (\Exception $e){
 		
 		    $this->message = "Got an internal problem({$e->getMessage()}). Please contact my creator!";
 	    }
+    	
     }
     
-    private function pileBlockStackOnto()
-    {
-    
-        echo 'pileBlockStackOnto'.PHP_EOL;
-    }
-	
-	private function pileBlockStackOver()
-	{
-	
-		echo 'pileBlockStackOver'.PHP_EOL;
-	}
-	
-	
 	
 	//search stack for block at given position
 	private function searchStackByPosition($name,$position,$whichBlock)
@@ -303,9 +240,6 @@ class Robot {
 			
 			if ($block->get_name() == $name) {
 				
-				
-				
-				
 				//move a onto b
 				if($this->command->get_firstPart()=='move' && $this->command->get_secondPart() =='onto'){
 					
@@ -331,7 +265,6 @@ class Robot {
 				//move a over b
 				if($this->command->get_firstPart()=='move' && $this->command->get_secondPart() =='over'){
 					
-					
 					switch($whichBlock){
 						
 						case "firstBlock":
@@ -352,27 +285,62 @@ class Robot {
 				
 				//pile a onto b
 				if($this->command->get_firstPart()=='pile' && $this->command->get_secondPart() =='onto'){
-					$this->pileBlockStackOnto();
+					
+					switch($whichBlock){
+						
+						case "firstBlock":
+							return $this->getStackOfBlock($blockCollection,$block);
+							break;
+						
+						case "secondBlock":
+							//verify if there are other blocks on top of firstBlock, reinitialise their positions
+							$this->reinitialiseBlockPosition($blockCollection);
+							return $blockCollection;
+							break;
+					}
 				}
 				
 				//pile a over b
 				if($this->command->get_firstPart()=='pile' && $this->command->get_secondPart() =='over'){
-					$this->pileBlockStackOver();
+					
+					switch($whichBlock){
+						
+						case "firstBlock":
+							
+							return $this->getStackOfBlock($blockCollection,$block);
+							break;
+						
+						case "secondBlock":
+							
+							return $blockCollection;
+							break;
+					}
+					
 				}
-				
-				
-				
-				
-				
-				
-				
-				
-				
 			}
 		}
 		return null;
 	}
 	
+	/**
+	 * Get all blocks found on top of a block
+	 * @param $blockCollection
+	 * @param $block
+	 * @return \App\Classes\BlockCollection
+	 */
+	private function getStackOfBlock($blockCollection,$block): BlockCollection
+	{
+		$blockCollection->getIterator()->remove();
+		$newBlockCollection = new BlockCollection();
+		$newBlockCollection->addBlock($block);
+		
+		foreach($blockCollection->getIterator() as $nextBlock){
+			$blockCollection->getIterator()->remove();
+			$newBlockCollection->addBlock($nextBlock);
+		}
+		
+		return $newBlockCollection;
+	}
 	
 	/**
 	 * add block back to initial position in the stack
