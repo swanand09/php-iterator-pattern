@@ -177,7 +177,7 @@ class Robot {
 		
 		
 		    switch(get_class($detached_firstBlock)){
-			    case 'Block':
+			    case 'App\Classes\Block':
 				
 				    //set actual position of first block to the initial position of second block;
 				    $detached_firstBlock->set_actualPosition($secondBlockPosition);
@@ -185,7 +185,7 @@ class Robot {
 				    $secondBlock_blockCollection->addBlock($detached_firstBlock);
 				
 				    break;
-			    case 'BlockCollection':
+			    case 'App\Classes\BlockCollection':
 				
 				    $firstBlockCollection = $detached_firstBlock;
 				    $firstBlockCollection->setIterator();
@@ -365,7 +365,9 @@ class Robot {
 		}
 	}
 	
-	
+	/**
+	 * print final result on screen
+	 */
 	public function printResult()
 	{
 		$this->stackCollection->setIterator();
