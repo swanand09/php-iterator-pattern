@@ -201,6 +201,8 @@ class Robot {
 				    	$this->stackCollection->setIterator();
 				    	$this->stackCollection->getIterator()->set_position($secondBlockPosition);
 					    $secondBlock_blockCollection  = $this->stackCollection->getIterator()->current();
+					    $secondBlock_blockCollection->setIterator();
+					    $secondBlock_blockCollection->getIterator()->set_position(0);
 					    foreach ($firstBlockCollection->getIterator() as $block) {
 						
 						    $secondBlock_blockCollection->addBlock($block);
@@ -241,9 +243,7 @@ class Robot {
 			if($this->stackCollection->getIterator()->key()!=$positionToOmit){ // already look into this position
 			
 				$lookupItem =  $this->searchBlockByName($blockCollection,$name,$whichBlock);
-				if(is_null($lookupItem)){
-					continue;
-				}else{
+				if(!is_null($lookupItem)){
 					return $lookupItem;
 				}
 			}
@@ -309,7 +309,11 @@ class Robot {
 					switch($whichBlock){
 						
 						case "firstBlock":
-							return $this->getStackOfBlock($blockCollection,$block);
+							$newBlockCollection = new BlockCollection();
+							$newBlockCollection->addBlock($block);
+							$blockCollection->getIterator()->remove();
+							$this->getStackOfBlock($newBlockCollection,$blockCollection);
+							return $newBlockCollection;
 							break;
 						
 						case "secondBlock":
