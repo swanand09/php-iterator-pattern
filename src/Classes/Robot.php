@@ -184,8 +184,6 @@ class Robot {
 				    //add firstBlock as stack of secondBlock;
 				    if(!is_null($secondBlock_blockCollection)) {
 					    $secondBlock_blockCollection->addBlock($detached_firstBlock);
-				    }else{
-				    	echo 'test';
 				    }
 				
 				    break;
@@ -211,14 +209,13 @@ class Robot {
 						
 						    $secondBlock_blockCollection->addBlock($block);
 					    }
-					    //ensure right index in blockCollection
-					    //$secondBlock_blockCollection->reindexBlock();
-					   // $this->stackCollection->addStack($secondBlock_blockCollection);
+					   
 				    }
 				
 				    
 				    break;
 		    }
+		    //ensure right index in blockCollection
 		    $secondBlock_blockCollection->reindexBlock();
 		
 	    }catch (\Exception $e){
