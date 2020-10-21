@@ -1,0 +1,18 @@
+25
+move 19 onto 11
+move 18 over 10
+move 17 over 1
+move 6 over 1
+pile 18 over 6
+pile 8 over 5
+move 20 over 14
+move 14 over 9
+move 9 onto 11
+move 10 over 14
+move 17 over 1
+move 16 over 10
+pile 8 over 6
+pile 8 over 5
+move 22 over 14
+move 24 over 19
+quit

@@ -288,23 +288,26 @@ class Robot {
 			
 			if($this->stackCollection->getIterator()->key()!=$positionToOmit){
 				
-				$blockCollection->setIterator();
-				foreach ($blockCollection->getIterator() as $block) {
-					
-					if ($block->get_name() == $name) {
-						
-						//verify if there are other blocks on top of firstBlock and reinitialise their positions
-						$this->reinitialiseBlockPosition($blockCollection);
-						return $block;
-					}
-				}
-				
+				$this->searchBlockByName($blockCollection,$name);
 			}
-		
 		}
 	}
 	
 	
+	//search block by name, given block collection
+	private function searchBlockByName($blockCollection,$name): Block
+	{
+		$blockCollection->setIterator();
+		foreach ($blockCollection->getIterator() as $block) {
+			
+			if ($block->get_name() == $name) {
+				
+				//verify if there are other blocks on top of firstBlock and reinitialise their positions
+				$this->reinitialiseBlockPosition($blockCollection);
+				return $block;
+			}
+		}
+	}
 	
 	/**
 	 * empty stack of a particular block
