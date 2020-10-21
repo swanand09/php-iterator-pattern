@@ -26,24 +26,23 @@ class BlockArranger{
 		$this->handleUserInput();
 	}
 	
-	public function readInput()
+	public function readInput($input)
 	{
-		$paramHandle = fopen ("php://stdin","r");
-		$filename = fgets($paramHandle);
-		$filename = trim($filename);
+		
+		$filename = trim($input);
 		$inputs = file($filename);
 		
-		if(!empty($inputs) && count($inputs)>1) {
-			$num = $inputs[0];
+		if ($inputs && count($inputs) > 1) {
+			$num =(int)$inputs[0];
 			
 			if ($num > 0 && $num <= $this->robot->get_maxBlocks()) {
 				
 				$this->printText("You have $num blocks");
 				$this->robot->generateBlockCollection($num);
-				$commands = array_shift($inputs);
-				foreach ($commands as $command) {
-					
-					if($command!=$this->robot->get_command()->get_exitCommand()) {
+				array_shift($inputs);
+				foreach ($inputs as $command) {
+					$command = trim($command);
+					if ($command != $this->robot->get_command()->get_exitCommand()) {
 						//validate command
 						if ($this->robot->validateCommand($command)) {
 							
@@ -54,7 +53,7 @@ class BlockArranger{
 							$this->printText($this->robot->getMessage());
 							continue;
 						}
-					}else{
+					} else {
 						//print table blocks and respective stacks
 						
 						$this->printText("Humble servant always at your service! Bye!");
@@ -65,8 +64,9 @@ class BlockArranger{
 				
 				$this->printText("Wrong value! Please input a number within range 2 <= n <={$this->robot->get_maxBlocks()}!");
 			}
+		}else{
+			throw new \Exception( "file does not exist");
 		}
-		
 	}
 	
 	
@@ -83,7 +83,6 @@ class BlockArranger{
 	
 	public function handleUserInput($command=false)
 	{
-		
 		
 		$handle = fopen ("php://stdin","r");
 		$line = fgets($handle);

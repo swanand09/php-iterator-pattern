@@ -54,7 +54,7 @@ class Robot {
 			$blockCollection->addBlock($block);
 			$this->stackCollection->addStack($blockCollection);
 		}
-		$this->stackCollection->set_numBlocks($num);
+		$this->stackCollection->set_numBlocks((int)$num);
 		
 	}
 	

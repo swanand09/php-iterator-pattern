@@ -54,7 +54,7 @@ class StacksOrderIterator implements \Iterator {
 	
 	public function set_position($position)
 	{
-		$this->position = $position-1;
+		$this->position = $position;
 	}
 	
 }
