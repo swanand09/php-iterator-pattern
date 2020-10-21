@@ -40,6 +40,10 @@ class BlockCollection implements \IteratorAggregate{
 	{
 		unset($this->listBlocks[$position]);
 	}
+	public function reindexBlock()
+	{
+		$this->listBlocks = array_values($this->listBlocks);
+	}
 	
 	public function setIterator()
 	{

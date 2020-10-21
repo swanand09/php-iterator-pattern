@@ -207,6 +207,8 @@ class Robot {
 						
 						    $secondBlock_blockCollection->addBlock($block);
 					    }
+					    //ensure right index in blockCollection
+					    $secondBlock_blockCollection->reindexBlock();
 					   // $this->stackCollection->addStack($secondBlock_blockCollection);
 				    }
 				
