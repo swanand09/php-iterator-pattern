@@ -213,8 +213,46 @@ class Robot {
     
     private function moveBlockOver()
     {
-    
-    	echo 'moveBlockOver'.PHP_EOL;
+	
+	    try {
+		
+		    //lookup firstBlock from collection
+		    //attempt to check if the block based on its name or initial position is on same stack as initially set
+		    $blockPosition = ((int)$this->command->get_firstBlock()-1);
+		    $blockName = (int)$this->command->get_firstBlock();
+		
+		    //Quick Lookup
+		    $firstBlockDetached = $this->searchStackByPosition($blockName,$blockPosition,'firstBlock');
+		
+		    if(is_null($firstBlockDetached)){
+			
+			    //search entire stack collection
+			    $firstBlockDetached = $this->searchStackCollection($blockName,$blockPosition,'firstBlock');
+		    }
+		
+		    //lookup secondBlock from collection
+		    $secondBlockPosition = ((int)$this->command->get_secondBlock()-1);
+		    $secondBlockName = (int)$this->command->get_secondBlock();
+		
+		    //Quick Lookup
+		    $secondBlock_blockCollection = $this->searchStackByPosition($secondBlockName,$secondBlockPosition,'secondBlock');
+		
+		    if(is_null($secondBlock_blockCollection)){
+			
+			    //search entire stack collection
+			    $secondBlock_blockCollection = $this->searchStackCollection($secondBlockName,$secondBlockPosition,'secondBlock');
+		    }
+		
+		    //set actual position of first block to the initial position of second block;
+		    $firstBlockDetached->set_actualPosition($secondBlockPosition);
+		    //add firstBlock as stack of secondBlock;
+		    $secondBlock_blockCollection->addBlock($firstBlockDetached);
+		
+		
+	    }catch (\Exception $e){
+		
+		    $this->message = "Got an internal problem({$e->getMessage()}). Please contact my creator!";
+	    }
     }
     
     private function pileBlockStackOnto()
@@ -265,22 +303,71 @@ class Robot {
 			
 			if ($block->get_name() == $name) {
 				
-				switch($whichBlock){
+				
+				
+				
+				//move a onto b
+				if($this->command->get_firstPart()=='move' && $this->command->get_secondPart() =='onto'){
 					
-					case "firstBlock":
-						//remove block from block collection
-						$blockCollection->getIterator()->remove();
-						//verify if there are other blocks on top of firstBlock, reinitialise their positions
-						$this->reinitialiseBlockPosition($blockCollection);
-						return $block;
-					break;
+					switch($whichBlock){
+						
+						case "firstBlock":
+							//remove block from block collection
+							$blockCollection->getIterator()->remove();
+							//verify if there are other blocks on top of firstBlock, reinitialise their positions
+							$this->reinitialiseBlockPosition($blockCollection);
+							return $block;
+							break;
+						
+						case "secondBlock":
+							//verify if there are other blocks on top of firstBlock, reinitialise their positions
+							$this->reinitialiseBlockPosition($blockCollection);
+							return $blockCollection;
+							break;
+					}
 					
-					case "secondBlock":
-						//verify if there are other blocks on top of firstBlock, reinitialise their positions
-						$this->reinitialiseBlockPosition($blockCollection);
-						return $blockCollection;
-					break;
 				}
+				
+				//move a over b
+				if($this->command->get_firstPart()=='move' && $this->command->get_secondPart() =='over'){
+					
+					
+					switch($whichBlock){
+						
+						case "firstBlock":
+							//remove block from block collection
+							$blockCollection->getIterator()->remove();
+							//verify if there are other blocks on top of firstBlock, reinitialise their positions
+							$this->reinitialiseBlockPosition($blockCollection);
+							return $block;
+							break;
+						
+						case "secondBlock":
+							
+							return $blockCollection;
+							break;
+					}
+					
+				}
+				
+				//pile a onto b
+				if($this->command->get_firstPart()=='pile' && $this->command->get_secondPart() =='onto'){
+					$this->pileBlockStackOnto();
+				}
+				
+				//pile a over b
+				if($this->command->get_firstPart()=='pile' && $this->command->get_secondPart() =='over'){
+					$this->pileBlockStackOver();
+				}
+				
+				
+				
+				
+				
+				
+				
+				
+				
 			}
 		}
 		return null;

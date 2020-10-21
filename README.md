@@ -3,7 +3,7 @@
 ## Installation
 -  Requirement installation environment: PHP 7, composer
 -  do ```composer install ```
-- to run the application, do ``` php block-arranger.php ``` and follow commands instruction
+- to run the application, do ``` php robots.php input1.txt``` and wait for print result
 
 - To run unit testing, do ``` php tests.php 10 ``` feel free to pass any number as parameter its a random commands
  generator
