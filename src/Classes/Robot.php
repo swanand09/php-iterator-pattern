@@ -235,11 +235,17 @@ class Robot {
 	private function searchStackCollection($name,$positionToOmit,$whichBlock)
 	{
 		$this->stackCollection->setIterator();
+		$lookupItem = null;
 		foreach($this->stackCollection->getIterator() as $blockCollection){
 			
 			if($this->stackCollection->getIterator()->key()!=$positionToOmit){ // already look into this position
-				
-				return $this->searchBlockByName($blockCollection,$name,$whichBlock);
+			
+				$lookupItem =  $this->searchBlockByName($blockCollection,$name,$whichBlock);
+				if(is_null($lookupItem)){
+					continue;
+				}else{
+					return $lookupItem;
+				}
 			}
 		}
 	}
