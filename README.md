@@ -4,7 +4,8 @@
 -  Requirement installation environment: PHP 7, composer
 -  Instructions:
     -  do ```composer install ```
-    - to run the application, do ``` php robots.php input1.txt``` and wait for print result
+    - to run the application, do ``` php robots.php input1.txt``` and wait for print result( Can create more input
+     text file with similar format, example input2.txt)
     - To run unit testing, do ``` php tests.php 10 ``` feel free to pass any number as parameter, its the number of
  commands generated for a random number of blocks between 2 and 25
 ## Spec:
