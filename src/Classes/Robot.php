@@ -189,9 +189,23 @@ class Robot {
 				
 				    $firstBlockCollection = $detached_firstBlock;
 				    $firstBlockCollection->setIterator();
-				    foreach($firstBlockCollection->getIterator() as $block){
+				    
+				    if(!is_null($secondBlock_blockCollection)) {
 					
-					    $secondBlock_blockCollection->addBlock($block);
+					   foreach ($firstBlockCollection->getIterator() as $block) {
+						
+						   $secondBlock_blockCollection->addBlock($block);
+					   }
+				    }else{
+				    	
+				    	$this->stackCollection->setIterator();
+				    	$this->stackCollection->getIterator()->set_position($secondBlockPosition);
+					    $secondBlock_blockCollection  = $this->stackCollection->getIterator()->current();
+					    foreach ($firstBlockCollection->getIterator() as $block) {
+						
+						    $secondBlock_blockCollection->addBlock($block);
+					    }
+					   // $this->stackCollection->addStack($secondBlock_blockCollection);
 				    }
 				
 				    break;
@@ -306,8 +320,11 @@ class Robot {
 					switch($whichBlock){
 						
 						case "firstBlock":
-							
-							return $this->getStackOfBlock($blockCollection,$block);
+							$newBlockCollection = new BlockCollection();
+							$newBlockCollection->addBlock($block);
+							$blockCollection->getIterator()->remove();
+							$this->getStackOfBlock($newBlockCollection,$blockCollection);
+							return $newBlockCollection;
 							break;
 						
 						case "secondBlock":
@@ -322,24 +339,17 @@ class Robot {
 		return null;
 	}
 	
-	/**
-	 * Get all blocks found on top of a block
-	 * @param $blockCollection
-	 * @param $block
-	 * @return \App\Classes\BlockCollection
-	 */
-	private function getStackOfBlock($blockCollection,$block): BlockCollection
+	//Get all blocks found on top of a block
+	private function getStackOfBlock(&$newBlockCollection, $blockCollection)
 	{
-		$blockCollection->getIterator()->remove();
-		$newBlockCollection = new BlockCollection();
-		$newBlockCollection->addBlock($block);
-		
-		foreach($blockCollection->getIterator() as $nextBlock){
+		$blockCollection->getIterator()->next();
+		if($blockCollection->getIterator()->valid()) {
+			
+			$block = $blockCollection->getIterator()->current();
+			$newBlockCollection->addBlock($block);
 			$blockCollection->getIterator()->remove();
-			$newBlockCollection->addBlock($nextBlock);
+			$this->getStackOfBlock($newBlockCollection,$blockCollection);
 		}
-		
-		return $newBlockCollection;
 	}
 	
 	/**
