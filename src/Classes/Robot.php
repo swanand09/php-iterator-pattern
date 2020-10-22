@@ -66,6 +66,8 @@ class Robot {
 			if (sizeof($textSplit) == 4) {
 		
 				return $this->handleCommand($textSplit);
+			}else{
+				$this->message = "Invalid Command. Please try again!";
 			}
 		}else{
 			$this->message="exit command";
@@ -90,7 +92,7 @@ class Robot {
         
 		list($firstPart,$firstBlock,$secondPart,$secondBlock) = $textSplit;
 		$isValid = true;
-
+		
 		if(!is_numeric($firstBlock)) {
 
 			$this->message = "The first block entered should be a number. Please try again!";

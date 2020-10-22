@@ -51,8 +51,9 @@ class BlockArranger{
 							$this->robot->executeCommand();
 						} else {
 							
-							$this->printText($command);
+							
 							$this->printText($this->robot->getMessage());
+							$this->printText($command);
 							break;
 						}
 					} else {
