@@ -90,7 +90,19 @@ class Robot {
         
 		list($firstPart,$firstBlock,$secondPart,$secondBlock) = $textSplit;
 		$isValid = true;
-        
+
+		if(!is_numeric($firstBlock)) {
+
+			$this->message = "The first block entered should be a number. Please try again!";
+			$isValid = false;
+		}	
+		
+		if(!is_numeric($secondBlock)) {
+
+			$this->message = "The second block entered should be a number. Please try again!";
+			$isValid = false;
+		}	
+		
         if($firstBlock >= $this->stackCollection->get_numBlocks()) {
 
 			$this->message = "The first block cannot be greater than the total number of blocks {$this->stackCollection->get_numBlocks()}. Please try again!";

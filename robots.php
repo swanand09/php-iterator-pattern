@@ -9,12 +9,17 @@ use App\Classes\BlockArranger;
 $blockArranger = new BlockArranger();
 
 try {
+	
+
+	//$blockArranger->init();
+	
 	if(isset($argv[1]) && !empty($argv[1])) {
 		
 		$blockArranger->readInput($argv[1]);
 	}else{
 		throw new \Exception("Input is not valid");
 	}
+	
 }catch(Exception $e){
 	
 	$blockArranger->printText("Robot fails with error: {$e->getMessage()} Please contact its creator!");
