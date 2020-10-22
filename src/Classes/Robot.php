@@ -404,7 +404,7 @@ class Robot {
 			$block->set_actualPosition($block->get_initialPosition());
 			$initialBlockCollection->addBlock($block);
 			$initialBlockCollection->reindexBlock();
-			$blockCollection>getIterator()->remove();
+			$blockCollection->getIterator()->remove();
 			
 			//do same for next block in the stack
 			$this->reinitialiseBlockPosition($blockCollection);
