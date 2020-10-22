@@ -88,53 +88,57 @@ class Robot {
     public function handleCommand($textSplit): bool
     {
         
-        list($firstPart,$firstBlock,$secondPart,$secondBlock) = $textSplit;
+		list($firstPart,$firstBlock,$secondPart,$secondBlock) = $textSplit;
+		$isValid = true;
         
-        if($firstBlock <= $this->stackCollection->get_numBlocks()) {
+        if($firstBlock >= $this->stackCollection->get_numBlocks()) {
+
+			$this->message = "The first block cannot be greater than the total number of blocks {$this->stackCollection->get_numBlocks()}. Please try again!";
+			$isValid = false;
+		}	
 	
-	        if($secondBlock <= $this->stackCollection->get_numBlocks()) {
+		if($secondBlock >= $this->stackCollection->get_numBlocks()) {
+
+			$this->message = "The second block cannot be greater than the total number of blocks {$this->stackCollection->get_numBlocks()}. Please try again!";
+			$isValid = false;
+		}
 		
-		        if ($firstBlock != $secondBlock) {
+		if ($firstBlock == $secondBlock) {
+
+			$this->message = "The first block cannot be same number as second block. Please try again!";
+			$isValid = false;
+		}
+
+		if (!in_array($firstPart, $this->command->get_firstPartValues())) {
+
+			$this->message = "First text of the command should be 'move' or 'pile'. Please try again!";	
+			$isValid = false;
+		}	
+		if ((int)$firstBlock < 0) {	        
+
+			$this->message = "First block should be a number. Please try again!";
+			$isValid = false;
+		}
+		if (!in_array($secondPart, $this->command->get_secondPartValues())) {
 			
-			        if (in_array($firstPart, $this->command->get_firstPartValues())) {
+			$this->message = "Third text of the command should be 'onto' or 'over'. Please try again!";
+			$isValid = false;
+		}		
+		if ((int)$secondBlock < 0) {
+
+			$this->message = "Second block should be a number. Please try again!";
+			$isValid = false;
+		}	
+		
+		if($isValid){
 				
-				        if ((int)$firstBlock > 0) {
-					
-					        if (in_array($secondPart, $this->command->get_secondPartValues())) {
-						
-						        if ((int)$secondBlock > 0) {
-							
-							        $this->command->set_firstPart($firstPart);
-							        $this->command->set_firstBlock($firstBlock);
-							        $this->command->set_secondPart($secondPart);
-							        $this->command->set_secondBlock($secondBlock);
-							
-							        return true;
-						        } else {
-							        $this->message = "Second block should be a number. Please try again!";
-						        }
-						
-					        } else {
-						
-						        $this->message = "Third text of the command should be 'onto' or 'over'. Please try again!";
-					        }
-					
-				        } else {
-					        $this->message = "First block should be a number. Please try again!";
-				        }
-				
-			        } else {
-				        $this->message = "First text of the command should be 'move' or 'pile'. Please try again!";
-			        }
-		        } else {
-			        $this->message = "Pile or move same block is not allowed. Please try again!";
-		        }
-	        }else{
-		        $this->message = "The second block cannot be greater than the total number of blocks $this->stackCollection->get_numBlocks(). Please try again!";
-	        }
-        }else{
-	        $this->message = "The first block cannot be greater than the total number of blocks $this->stackCollection->get_numBlocks(). Please try again!";
-        }
+			$this->command->set_firstPart($firstPart);
+			$this->command->set_firstBlock($firstBlock);
+			$this->command->set_secondPart($secondPart);
+			$this->command->set_secondBlock($secondBlock);
+			return true;
+		}
+			
         
         return false;
     }
