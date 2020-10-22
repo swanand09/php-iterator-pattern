@@ -46,10 +46,12 @@ class BlockArranger{
 						//validate command
 						if ($this->robot->validateCommand($command)) {
 							
+							$this->printText($command);
 							// execute command
 							$this->robot->executeCommand();
 						} else {
 							
+							$this->printText($command);
 							$this->printText($this->robot->getMessage());
 							break;
 						}
