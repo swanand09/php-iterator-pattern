@@ -138,4 +138,8 @@ class BlockArranger{
 		}
 	}
 	
+	public function __destruct() {
+		$this->robot;
+	}
+	
 }

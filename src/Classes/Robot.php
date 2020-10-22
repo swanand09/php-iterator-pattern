@@ -433,5 +433,7 @@ class Robot {
 		}
 	}
 	
-
+	public function __destruct() {
+		$this->stackCollection;
+	}
 }
