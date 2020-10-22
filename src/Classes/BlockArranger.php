@@ -51,7 +51,7 @@ class BlockArranger{
 						} else {
 							
 							$this->printText($this->robot->getMessage());
-							continue;
+							break;
 						}
 					} else {
 						//print table blocks and respective stacks
