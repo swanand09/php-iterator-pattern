@@ -1,4 +1,4 @@
-# salesfloor robotscript test
+# Iterator pattern PHP7
 
 ## Installation
 -  Requirement installation environment: PHP 7, composer
